@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.madebyluoj.framegrabber.dao.SysCameraMapper;
 import com.madebyluoj.framegrabber.entity.SysCamera;
+import com.madebyluoj.framegrabber.util.FileUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import org.bytedeco.ffmpeg.global.avutil;
@@ -45,6 +46,8 @@ public class GrabberServiceImpl extends ServiceImpl<SysCameraMapper, SysCamera> 
 
     @Resource
     private Executor executor;
+    @Resource
+    private FileUtil fileUtil;
 
     /**
      * 项目启动时初始化视频流播放和抽帧
@@ -89,7 +92,7 @@ public class GrabberServiceImpl extends ServiceImpl<SysCameraMapper, SysCamera> 
                         byte[] bytes = outputStream.toByteArray();
                         //输出抽帧图片
                         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-
+                        fileUtil.upload(inputStream,".jpg");
                     } catch (Throwable e) {
                         LOGGER.error("Grabber error", e);
                     }
